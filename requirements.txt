@@ -1,2 +1,5 @@
 Django==4.2.30
 reportlab==4.0.4
+gunicorn==20.1.0
+whitenoise==6.4.0
+psycopg2-binary==2.9.9
