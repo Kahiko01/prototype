@@ -1,0 +1,86 @@
+{% extends 'farmers/base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1>☕ Coffee Inventory</h1>
+    <div>
+        <a href="/coffee/add/" class="btn" style="background: #ff9800;">➕ Add Batch</a>
+        <a href="/admin-dashboard/" class="btn">← Admin</a>
+    </div>
+</div>
+
+<!-- Filter and Stats -->
+<div class="card" style="background: #e8f0e6;">
+    <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+        <span><strong>Filter:</strong></span>
+        <a href="/coffee/inventory/" class="btn" style="padding: 5px 15px; font-size: 0.9rem;">All</a>
+        <a href="/coffee/inventory/?status=in_store" class="btn" style="padding: 5px 15px; font-size: 0.9rem; background: #e3f2fd; color: #000;">In Store</a>
+        <a href="/coffee/inventory/?status=on_machine" class="btn" style="padding: 5px 15px; font-size: 0.9rem; background: #fff3e0; color: #000;">On Machine</a>
+        <a href="/coffee/inventory/?status=processed" class="btn" style="padding: 5px 15px; font-size: 0.9rem; background: #e8f5e9; color: #000;">Processed</a>
+        <a href="/coffee/inventory/?status=sold" class="btn" style="padding: 5px 15px; font-size: 0.9rem; background: #fce4ec; color: #000;">Sold</a>
+    </div>
+</div>
+
+<!-- Summary Stats -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 20px 0;">
+    <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 1.3rem; font-weight: bold; color: #1e3d2f;">{{ stats.in_store|floatformat:0 }} kg</div>
+        <div style="color: #666; font-size: 0.9rem;">In Store</div>
+    </div>
+    <div style="background: #fff3e0; padding: 15px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 1.3rem; font-weight: bold; color: #e65100;">{{ stats.on_machine|floatformat:0 }} kg</div>
+        <div style="color: #666; font-size: 0.9rem;">On Machine</div>
+    </div>
+    <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 1.3rem; font-weight: bold; color: #2e7d32;">{{ stats.processed|floatformat:0 }} kg</div>
+        <div style="color: #666; font-size: 0.9rem;">Processed</div>
+    </div>
+    <div style="background: #fce4ec; padding: 15px; border-radius: 8px; text-align: center;">
+        <div style="font-size: 1.3rem; font-weight: bold; color: #c62828;">{{ stats.sold|floatformat:0 }} kg</div>
+        <div style="color: #666; font-size: 0.9rem;">Sold</div>
+    </div>
+</div>
+
+<!-- Inventory Table -->
+<div class="card">
+    <h2>All Coffee Batches</h2>
+    {% if batches %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Batch #</th>
+                    <th>Farmer</th>
+                    <th>Qty (kg)</th>
+                    <th>Grade</th>
+                    <th>Status</th>
+                    <th>Location</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for batch in batches %}
+                <tr>
+                    <td><strong>{{ batch.batch_number }}</strong></td>
+                    <td>{{ batch.farmer.full_name }}</td>
+                    <td>{{ batch.quantity_kg }}</td>
+                    <td><span style="background: #e8f0e6; padding: 2px 10px; border-radius: 10px;">{{ batch.grade }}</span></td>
+                    <td>
+                        <span style="background: 
+                            {% if batch.status == 'in_store' %}#e3f2fd{% elif batch.status == 'on_machine' %}#fff3e0{% elif batch.status == 'processed' %}#e8f5e9{% else %}#fce4ec{% endif %}; 
+                            padding: 3px 12px; border-radius: 12px; font-size: 0.8rem;">
+                            {{ batch.get_status_display }}
+                        </span>
+                    </td>
+                    <td>{{ batch.location }}</td>
+                    <td>
+                        <a href="/coffee/update/{{ batch.id }}/" class="btn" style="padding: 3px 10px; font-size: 0.8rem;">Update</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="color: #666; text-align: center; padding: 40px;">No coffee batches found.</p>
+    {% endif %}
+</div>
+{% endblock %}

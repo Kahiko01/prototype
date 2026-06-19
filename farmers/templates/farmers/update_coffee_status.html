@@ -1,0 +1,51 @@
+{% extends 'farmers/base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1>☕ Update Coffee Status</h1>
+    <a href="/coffee/inventory/" class="btn">← Back to Inventory</a>
+</div>
+
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h2>Batch: {{ batch.batch_number }}</h2>
+    <div style="background: #e8f0e6; padding: 15px; border-radius: 8px; margin: 15px 0;">
+        <p><strong>Farmer:</strong> {{ batch.farmer.full_name }}</p>
+        <p><strong>Quantity:</strong> {{ batch.quantity_kg }} kg</p>
+        <p><strong>Grade:</strong> {{ batch.grade }}</p>
+        <p><strong>Current Status:</strong> 
+            <span style="background: 
+                {% if batch.status == 'in_store' %}#e3f2fd{% elif batch.status == 'on_machine' %}#fff3e0{% elif batch.status == 'processed' %}#e8f5e9{% else %}#fce4ec{% endif %}; 
+                padding: 3px 12px; border-radius: 12px;">
+                {{ batch.get_status_display }}
+            </span>
+        </p>
+        <p><strong>Location:</strong> {{ batch.location }}</p>
+        <p><strong>Entry Date:</strong> {{ batch.entry_date|date:"M d, Y H:i" }}</p>
+    </div>
+    
+    <form method="post" style="margin-top: 20px;">
+        {% csrf_token %}
+        <div style="margin: 15px 0;">
+            <label>New Status:</label>
+            <select name="status" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px;">
+                <option value="in_store" {% if batch.status == 'in_store' %}selected{% endif %}>In Store</option>
+                <option value="on_machine" {% if batch.status == 'on_machine' %}selected{% endif %}>On Machine</option>
+                <option value="processed" {% if batch.status == 'processed' %}selected{% endif %}>Processed</option>
+                <option value="sold" {% if batch.status == 'sold' %}selected{% endif %}>Sold</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn" style="width: 100%; padding: 12px; font-size: 1.1rem; background: #ff9800;">
+            ✅ Update Status
+        </button>
+    </form>
+</div>
+
+<div class="card" style="max-width: 600px; margin: 20px auto; background: #e8f0e6; text-align: center;">
+    <h3>📋 Status Guide</h3>
+    <p><strong>In Store:</strong> Coffee is in the warehouse waiting for processing</p>
+    <p><strong>On Machine:</strong> Coffee is being processed (pulping, fermenting, etc.)</p>
+    <p><strong>Processed:</strong> Coffee has been fully processed and ready for sale</p>
+    <p><strong>Sold:</strong> Coffee has been sold to buyers</p>
+</div>
+{% endblock %}

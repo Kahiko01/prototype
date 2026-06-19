@@ -1,0 +1,75 @@
+{% extends 'farmers/base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1>☕ Add Coffee Batch</h1>
+    <a href="/admin-dashboard/" class="btn">← Back to Admin Dashboard</a>
+</div>
+
+<div class="card" style="max-width: 700px; margin: 0 auto;">
+    <h2>Record New Coffee Delivery</h2>
+    <form method="post" style="margin-top: 20px;">
+        {% csrf_token %}
+        
+        <div style="margin: 15px 0;">
+            <label>Farmer:</label>
+            <select name="member_no" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px;">
+                <option value="">Select Farmer</option>
+                {% for farmer in farmers %}
+                <option value="{{ farmer.member_no }}">{{ farmer.full_name }} ({{ farmer.member_no }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div style="margin: 15px 0;">
+            <label>Quantity (kg):</label>
+            <input type="number" name="quantity" step="0.01" required 
+                   style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+        
+        <div style="margin: 15px 0;">
+            <label>Grade:</label>
+            <select name="grade" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px;">
+                <option value="A">Grade A - Premium</option>
+                <option value="B">Grade B - Standard</option>
+                <option value="C">Grade C - Lower</option>
+            </select>
+        </div>
+        
+        <div style="margin: 15px 0;">
+            <label>Price per KG (KSH):</label>
+            <input type="number" name="price_per_kg" step="0.01" value="50.00" required 
+                   style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+        
+        <div style="margin: 15px 0;">
+            <label>Store Location:</label>
+            <select name="location" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px;">
+                <option value="Main Store">Main Store</option>
+                <option value="Kiambu Store">Kiambu Store</option>
+                <option value="Thika Store">Thika Store</option>
+                <option value="Nakuru Store">Nakuru Store</option>
+            </select>
+        </div>
+        
+        <div style="margin: 15px 0;">
+            <label>Notes (optional):</label>
+            <textarea name="notes" rows="3" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
+        </div>
+        
+        <button type="submit" class="btn" style="width: 100%; padding: 12px; font-size: 1.1rem; background: #ff9800;">
+            ✅ Record Coffee Batch
+        </button>
+    </form>
+</div>
+
+<div class="card" style="max-width: 700px; margin: 20px auto; background: #fff3e0; text-align: center;">
+    <h3>💡 Quick Guide</h3>
+    <p>1. Select the farmer from the dropdown</p>
+    <p>2. Enter the weight of coffee delivered</p>
+    <p>3. Choose the quality grade</p>
+    <p>4. Set the price per kilogram</p>
+    <p>5. Select where the coffee is stored</p>
+    <p style="margin-top: 10px; color: #e65100;"><strong>Batch number will be auto-generated!</strong></p>
+</div>
+{% endblock %}

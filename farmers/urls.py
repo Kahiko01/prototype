@@ -19,4 +19,10 @@ urlpatterns = [
     
     # Staff only features
     path('staff/delivery/', views.staff_delivery, name='staff_delivery'),
+    
+    # Admin and coffee management - NEW
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('coffee/add/', views.add_coffee_batch, name='add_coffee_batch'),
+    path('coffee/inventory/', views.coffee_inventory, name='coffee_inventory'),
+    path('coffee/update/<int:batch_id>/', views.update_coffee_status, name='update_coffee_status'),
 ]
