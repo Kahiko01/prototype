@@ -1,0 +1,162 @@
+{% extends 'farmers/base.html' %}
+{% load static %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1>👋 Welcome, {{ farmer.full_name|default:"Farmer" }}</h1>
+    <span style="background: #1e3d2f; color: white; padding: 8px 16px; border-radius: 20px;">
+        Member #{{ farmer.member_no|default:"N/A" }}
+    </span>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-box" style="background: #e8f0e6;">
+        <div class="number">{{ total_quantity|default:"0" }} kg</div>
+        <div class="label">Total Deliveries</div>
+    </div>
+    <div class="stat-box" style="background: #d4e8d4;">
+        <div class="number">KSH {{ total_value|default:"0"|floatformat:0 }}</div>
+        <div class="label">Total Value</div>
+    </div>
+    <div class="stat-box" style="background: #c8dfc8;">
+        <div class="number">KSH {{ total_paid|default:"0"|floatformat:0 }}</div>
+        <div class="label">Total Paid</div>
+    </div>
+    <div class="stat-box" style="background: #ffecb3;">
+        <div class="number">KSH {{ total_pending|default:"0"|floatformat:0 }}</div>
+        <div class="label">Pending Payments</div>
+    </div>
+</div>
+
+<!-- Chart Section - NEW! -->
+<div class="card" style="background: white;">
+    <h2>📊 Yield Trends</h2>
+    <canvas id="yieldChart" style="max-height: 300px; width: 100%;"></canvas>
+</div>
+
+<div class="card">
+    <h2>📦 Recent Deliveries</h2>
+    {% if recent_deliveries %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Quantity (kg)</th>
+                    <th>Grade</th>
+                    <th>Center</th>
+                    <th>Amount (KSH)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for delivery in recent_deliveries %}
+                <tr>
+                    <td>{{ delivery.date|date:"M d, Y" }}</td>
+                    <td>{{ delivery.quantity }}</td>
+                    <td><span style="background: #e8f0e6; padding: 2px 10px; border-radius: 10px;">{{ delivery.grade }}</span></td>
+                    <td>{{ delivery.center }}</td>
+                    <td>{{ delivery.total_amount|floatformat:0 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="color: #666;">No deliveries recorded yet.</p>
+    {% endif %}
+    <div style="margin-top: 15px;">
+        <a href="/yield/" class="btn">View Full Yield History →</a>
+    </div>
+</div>
+
+<div class="card">
+    <h2>💰 Recent Payments</h2>
+    {% if payments %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Amount (KSH)</th>
+                    <th>Deductions</th>
+                    <th>Net Amount</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.payment_date|date:"M d, Y" }}</td>
+                    <td>{{ payment.amount|floatformat:0 }}</td>
+                    <td>{{ payment.deductions|floatformat:0 }}</td>
+                    <td><strong>{{ payment.net_amount|floatformat:0 }}</strong></td>
+                    <td>
+                        <span style="background: {% if payment.status == 'paid' %}#4CAF50{% else %}#ff9800{% endif %}; 
+                                  color: white; padding: 3px 12px; border-radius: 12px; font-size: 0.8rem;">
+                            {{ payment.get_status_display }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="color: #666;">No payment records found.</p>
+    {% endif %}
+    <div style="margin-top: 15px;">
+        <a href="/payments/" class="btn">View All Payments →</a>
+    </div>
+</div>
+
+<div class="card" style="background: #e8f0e6; text-align: center;">
+    <h3>📄 Download Your Statement</h3>
+    <p style="margin: 10px 0;">Get a complete PDF report of all your transactions.</p>
+    <a href="/statement/" class="btn" style="background: #2d5a45;">Download PDF</a>
+</div>
+
+<!-- Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Sample data - in real app this would come from the server
+    const ctx = document.getElementById('yieldChart').getContext('2d');
+    
+    // Get last 7 days of data from your deliveries
+    const chartData = {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+            label: 'Daily Yield (kg)',
+            data: [120, 150, 180, 130, 200, 160, 140],
+            backgroundColor: 'rgba(30, 61, 47, 0.2)',
+            borderColor: 'rgba(30, 61, 47, 1)',
+            borderWidth: 2,
+            tension: 0.4,
+            fill: true
+        }]
+    };
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: chartData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

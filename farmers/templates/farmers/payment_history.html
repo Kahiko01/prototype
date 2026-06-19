@@ -1,0 +1,42 @@
+{% extends 'farmers/base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1>💰 Payment History</h1>
+    <a href="/dashboard/" class="btn">← Back to Dashboard</a>
+</div>
+
+<div class="card">
+    {% if payments %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Amount (KSH)</th>
+                    <th>Deductions</th>
+                    <th>Net Amount</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.payment_date|date:"M d, Y" }}</td>
+                    <td>{{ payment.amount|floatformat:0 }}</td>
+                    <td>{{ payment.deductions|floatformat:0 }}</td>
+                    <td><strong>{{ payment.net_amount|floatformat:0 }}</strong></td>
+                    <td>
+                        <span style="background: {% if payment.status == 'paid' %}#4CAF50{% else %}#ff9800{% endif %}; 
+                                  color: white; padding: 3px 12px; border-radius: 12px; font-size: 0.8rem;">
+                            {{ payment.get_status_display }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="text-align: center; color: #666; padding: 40px 0;">No payment records found.</p>
+    {% endif %}
+</div>
+{% endblock %}

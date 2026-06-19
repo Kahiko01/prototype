@@ -1,0 +1,27 @@
+{% extends 'farmers/base.html' %}
+
+{% block content %}
+<div class="card" style="max-width: 400px; margin: 40px auto;">
+    <h2 style="text-align: center;">🔐 Login</h2>
+    <form method="post" style="margin-top: 20px;">
+        {% csrf_token %}
+        <div style="margin: 15px 0;">
+            <label>Username (Member Number):</label>
+            <input type="text" name="username" required 
+                   style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+        <div style="margin: 15px 0;">
+            <label>Password:</label>
+            <input type="password" name="password" required 
+                   style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+        <button type="submit" class="btn" style="width: 100%; padding: 12px; font-size: 1.1rem;">
+            Login
+        </button>
+    </form>
+    <div style="text-align: center; margin-top: 20px; color: #666;">
+        <p>Demo credentials:</p>
+        <p><strong>Username:</strong> admin | <strong>Password:</strong> board2026</p>
+    </div>
+</div>
+{% endblock %}

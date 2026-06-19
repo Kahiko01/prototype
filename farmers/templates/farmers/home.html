@@ -1,0 +1,49 @@
+{% extends 'farmers/base.html' %}
+
+{% block content %}
+<div class="card" style="text-align: center; padding: 50px;">
+    <h1 style="font-size: 2.5rem;">🌾 Karuhiu Utheri</h1>
+    <h2 style="color: #2d5a45; margin: 20px 0;">Digital Farmers Cooperative</h2>
+    <p style="font-size: 1.2rem; max-width: 600px; margin: 20px auto;">
+        Empowering farmers with transparent yield tracking, 
+        instant payments, and real-time updates.
+    </p>
+    <div style="margin-top: 30px;">
+        <a href="/login/" class="btn" style="font-size: 1.1rem; padding: 15px 40px;">Login to Your Dashboard</a>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-box">
+        <div class="number">500+</div>
+        <div class="label">Active Farmers</div>
+    </div>
+    <div class="stat-box">
+        <div class="number">1,200+</div>
+        <div class="label">Deliveries This Month</div>
+    </div>
+    <div class="stat-box">
+        <div class="number">KSH 2.4M</div>
+        <div class="label">Total Payments</div>
+    </div>
+</div>
+
+{% if announcements %}
+<div class="card">
+    <h2>📢 Latest Announcements</h2>
+    {% for announcement in announcements %}
+        <div style="padding: 15px 0; border-bottom: 1px solid #eee;">
+            <h3>{{ announcement.title }}</h3>
+            <p style="color: #666; margin: 5px 0;">{{ announcement.content }}</p>
+            <small style="color: #999;">Posted: {{ announcement.date|date:"M d, Y" }}</small>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="card" style="background: #e8f0e6; text-align: center;">
+    <h3>📱 Need Help?</h3>
+    <p>Contact our support team: <strong>+254 700 123 456</strong></p>
+    <p style="font-size: 0.9rem; margin-top: 10px;">Available Monday-Friday, 8AM - 5PM</p>
+</div>
+{% endblock %}

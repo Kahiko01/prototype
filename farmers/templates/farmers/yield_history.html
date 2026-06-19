@@ -1,0 +1,42 @@
+{% extends 'farmers/base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1>📊 Yield History</h1>
+    <a href="/dashboard/" class="btn">← Back to Dashboard</a>
+</div>
+
+<div class="card">
+    {% if deliveries %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Quantity (kg)</th>
+                    <th>Grade</th>
+                    <th>Center</th>
+                    <th>Price/Unit</th>
+                    <th>Total (KSH)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for delivery in deliveries %}
+                <tr>
+                    <td>{{ delivery.date|date:"M d, Y" }}</td>
+                    <td>{{ delivery.quantity }}</td>
+                    <td><span style="background: #e8f0e6; padding: 2px 10px; border-radius: 10px;">{{ delivery.grade }}</span></td>
+                    <td>{{ delivery.center }}</td>
+                    <td>{{ delivery.price_per_unit }}</td>
+                    <td><strong>{{ delivery.total_amount|floatformat:0 }}</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div style="margin-top: 20px; text-align: right; font-size: 1.1rem;">
+            <strong>Total: {{ deliveries|length }} deliveries</strong>
+        </div>
+    {% else %}
+        <p style="text-align: center; color: #666; padding: 40px 0;">No yield records found.</p>
+    {% endif %}
+</div>
+{% endblock %}
